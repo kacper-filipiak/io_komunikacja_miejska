@@ -12,6 +12,9 @@ public class RepozytoriumRozkladow implements Repozytorium<Rozklad> {
     private List<Rozklad> rejestrRozkladow;
     @Override
     public Rozklad wyszukaj(String nazwa) {
+        for (Rozklad rozklad : rejestrRozkladow) {
+            if (rozklad.getNazwa().equals(nazwa)) return rozklad;
+        }
         return null;
     }
 
@@ -29,7 +32,9 @@ public class RepozytoriumRozkladow implements Repozytorium<Rozklad> {
     }
 
     public List<Rozklad> wyszukajZTrasa(Trasa trasa) {
-        return null;
+        return rejestrRozkladow.stream()
+                .filter(rozklad -> rozklad.getTrasa().equals(trasa))
+                .toList();
     }
 
 }

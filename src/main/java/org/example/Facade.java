@@ -22,13 +22,36 @@ public class Facade {
     private RepozytoriumPojazdow repozytoriumNiesprawnychPojazdow;
 
     List<Date> sprawdzGodzinyOdjazdowDlaPrzystanku(String[] dane) {
-        return null;
+        Przystanek przystanek = repozytoriumPrzystankow.wyszukaj(dane[0]);
+        if (przystanek == null) throw new IllegalArgumentException("Przystanek nie istnieje");
+        List<Trasa> trasy = repozytoriumTras.wyszukajZPrzystankiem(przystanek);
+        List<Date> czasyOdjazdu = new ArrayList<Date>();
+        for (Trasa trasa : trasy) {
+            List<Rozklad> rozklady = repozytoriumRozkladow.wyszukajZTrasa(trasa);
+            for (Rozklad rozklad : rozklady) {
+                czasyOdjazdu.add(rozklad.getCzasDotarciaNaPrzystanek(przystanek));
+            }
+        }
+        return czasyOdjazdu;
     }
 
     void dodajPrzystanek(String[] dane) {
+        Przystanek przystanek = repozytoriumPrzystankow.wyszukaj(dane[0]);
+        if (przystanek != null) throw new IllegalArgumentException("Przystanek już istnieje");
+        repozytoriumPrzystankow.dodaj(new Przystanek(dane[0], new Point2D.Double(Double.parseDouble(dane[1]), Double.parseDouble(dane[2]))));
     }
 
     void utworzTrase(String[] dane) {
+        Trasa trasa = repozytoriumTras.wyszukaj(dane[0]);
+        if (trasa != null) throw new IllegalArgumentException("Trasa już istnieje");
+        int liczbaPrzystankow = Integer.parseInt(dane[1]);
+        List<Przystanek> przystanki = new ArrayList<Przystanek>();
+        for (int i = 0; i < liczbaPrzystankow; i++) {
+            Przystanek przystanek = repozytoriumPrzystankow.wyszukaj(dane[2+i]);
+            if (przystanek == null) throw new IllegalArgumentException("Przystanek " + dane[2+i] + " nie istnieje");
+            przystanki.add(przystanek);
+        }
+        repozytoriumTras.dodaj(new Trasa(dane[0], przystanki));
     }
 
     void utworzRozklad(String[] dane) throws ParseException {
@@ -53,12 +76,30 @@ public class Facade {
     }
 
     void dodajPojazdDoRozkladu(String[] dane) {
+        Pojazd pojazd = repozytoriumSprawnychPojazdow.wyszukaj(dane[0]);
+        if (pojazd == null) {
+            pojazd = repozytoriumNiesprawnychPojazdow.wyszukaj(dane[0]);
+            if (pojazd == null) throw new IllegalArgumentException("Pojazd nie istnieje");
+            else throw new IllegalArgumentException("Pojazd jest niesprawny");
+        }
+        Rozklad rozklad = repozytoriumRozkladow.wyszukaj(dane[1]);
+        if (rozklad == null) throw new IllegalArgumentException("Rozklad nie istnieje");
+        rozklad.setPojazd(pojazd);
     }
 
     void usunPojazdZRozkladu(String[] dane) {
+        Rozklad rozklad = repozytoriumRozkladow.wyszukaj(dane[0]);
+        if (rozklad == null) throw new IllegalArgumentException("Rozklad nie istnieje");
+        rozklad.setPojazd(null);
     }
 
     void zarejestrujPojazd(String[] dane) {
+        Pojazd pojazd = repozytoriumSprawnychPojazdow.wyszukaj(dane[0]);
+        if (pojazd != null) throw new IllegalArgumentException("Pojazd juz istnieje");
+        pojazd = repozytoriumNiesprawnychPojazdow.wyszukaj(dane[0]);
+        if (pojazd != null) throw new IllegalArgumentException("Pojazd juz istnieje");
+        if (dane[1].equals("Sprawny")) repozytoriumSprawnychPojazdow.dodaj(new Pojazd(dane[0], Pojazd.StatusPojazdu.Sprawny));
+        else repozytoriumNiesprawnychPojazdow.dodaj(new Pojazd(dane[0], Pojazd.StatusPojazdu.Niesprawny));
     }
 
     void zglosAwarie(String[] dane) throws ParseException {
@@ -99,8 +140,13 @@ public class Facade {
         pojazd.setStatus( Pojazd.StatusPojazdu.valueOf(dane[1]));
     }
 
-    String[] sprawdzStanPojazdu(String[] dane) {
-        return null;
+    String sprawdzStanPojazdu(String[] dane) {
+        Pojazd pojazd = repozytoriumSprawnychPojazdow.wyszukaj(dane[0]);
+        if (pojazd == null) {
+            pojazd = repozytoriumNiesprawnychPojazdow.wyszukaj(dane[0]);
+            if (pojazd == null) throw new IllegalArgumentException("Pojazd nie istnieje");
+        }
+        return pojazd.getStatus().toString();
     }
 
     private Map<String, Date> obliczCzasyDojazduNaPrzytanki(Trasa trasa, Przystanek przystanekPoczatkowy, Date czasOdjazdu) {

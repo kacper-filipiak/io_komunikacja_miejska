@@ -9,6 +9,9 @@ public class RepozytoriumPrzystankow implements Repozytorium<Przystanek> {
 
     @Override
     public Przystanek wyszukaj(String nazwa) {
+        for (Przystanek przystanek : rejestrPrzystankow) {
+            if (przystanek.getNazwa().equals(nazwa)) return przystanek;
+        }
         return null;
     }
 

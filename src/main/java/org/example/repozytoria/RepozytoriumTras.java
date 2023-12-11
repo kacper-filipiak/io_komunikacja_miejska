@@ -10,6 +10,9 @@ public class RepozytoriumTras implements Repozytorium<Trasa> {
 
     @Override
     public Trasa wyszukaj(String nazwa) {
+        for (Trasa trasa : rejestrTras) {
+            if (trasa.getNazwa().equals(nazwa)) return trasa;
+        }
         return null;
     }
 
@@ -20,7 +23,9 @@ public class RepozytoriumTras implements Repozytorium<Trasa> {
         }
         return element;
     }
-    List<Trasa> wyszukajZPrzystankiem(Przystanek przystanek) {
-        return null;
+    public List<Trasa> wyszukajZPrzystankiem(Przystanek przystanek) {
+        return rejestrTras.stream()
+                .filter(trasa -> trasa.getPrzystanki().contains(przystanek))
+                .toList();
     }
 }
