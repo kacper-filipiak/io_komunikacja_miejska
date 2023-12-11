@@ -17,11 +17,21 @@ public class Rozklad {
         this.nazwa = nazwa;
     }
 
+    public String getNazwa() { return nazwa; }
+
+    public Trasa getTrasa() { return trasa; }
     public Pojazd getPojazd() {
         return pojazd;
     }
 
     public void setPojazd(Pojazd pojazd) {
         this.pojazd = pojazd;
+    }
+
+    public Date getCzasDotarciaNaPrzystanek (Przystanek przystanek) {
+        return czasyDotarciaNaPrzystanki.get(przystanek.getNazwa());
+    }
+    public Date getCzasDotarciaNaPrzystanek (String przystanek) {
+        return czasyDotarciaNaPrzystanki.get(przystanek);
     }
 }
