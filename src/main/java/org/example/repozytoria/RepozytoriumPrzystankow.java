@@ -2,11 +2,15 @@ package org.example.repozytoria;
 
 import org.example.valueobjects.Przystanek;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class RepozytoriumPrzystankow implements Repozytorium<Przystanek> {
-    private List<Przystanek> rejestrPrzystankow;
+    private final List<Przystanek> rejestrPrzystankow;
 
+    public RepozytoriumPrzystankow() {
+        rejestrPrzystankow = new ArrayList<>();
+    }
     @Override
     public Przystanek wyszukaj(String nazwa) {
         for (Przystanek przystanek : rejestrPrzystankow) {
