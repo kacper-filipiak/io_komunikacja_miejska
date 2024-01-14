@@ -15,11 +15,27 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class Facade {
-    private RepozytoriumPrzystankow repozytoriumPrzystankow;
-    private RepozytoriumTras repozytoriumTras;
-    private RepozytoriumRozkladow repozytoriumRozkladow;
-    private RepozytoriumPojazdow repozytoriumSprawnychPojazdow;
-    private RepozytoriumPojazdow repozytoriumNiesprawnychPojazdow;
+    private final RepozytoriumPrzystankow repozytoriumPrzystankow;
+    private final RepozytoriumTras repozytoriumTras;
+    private final RepozytoriumRozkladow repozytoriumRozkladow;
+    private final RepozytoriumPojazdow repozytoriumSprawnychPojazdow;
+    private final RepozytoriumPojazdow repozytoriumNiesprawnychPojazdow;
+
+    Facade() {
+        repozytoriumPrzystankow = Factory.createRepozytoriumPrzystankow();
+        repozytoriumTras = Factory.createRepozytoriumTras();
+        repozytoriumRozkladow = Factory.createRepozytoriumRozkladow();
+        repozytoriumSprawnychPojazdow = Factory.createRepozytoriumPojazdow();
+        repozytoriumNiesprawnychPojazdow = Factory.createRepozytoriumPojazdow();
+    }
+
+    Facade(RepozytoriumPrzystankow _repozytoriumPrzystankow, RepozytoriumTras _repozytoriumTras, RepozytoriumRozkladow _repozytoriumRozkladow, RepozytoriumPojazdow _repozytoriumSprawnychPojazdow, RepozytoriumPojazdow _repozytoriumNiesprawnychPojazdow) {
+        repozytoriumPrzystankow = _repozytoriumPrzystankow;
+        repozytoriumTras = _repozytoriumTras;
+        repozytoriumRozkladow = _repozytoriumRozkladow;
+        repozytoriumSprawnychPojazdow = _repozytoriumSprawnychPojazdow;
+        repozytoriumNiesprawnychPojazdow = _repozytoriumNiesprawnychPojazdow;
+    }
 
     List<Date> sprawdzGodzinyOdjazdowDlaPrzystanku(String[] dane) {
         Przystanek przystanek = repozytoriumPrzystankow.wyszukaj(dane[0]);
@@ -120,6 +136,7 @@ public class Facade {
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy", Locale.ENGLISH);
         Date data = formatter.parse(dane[2]);
         pojazd.setStatus( Pojazd.StatusPojazdu.valueOf(dane[1]));
+        pojazd.addHistoryEntry(data, dane[3]);
     }
 
     void zglosNaprawe(String[] dane) throws ParseException {
@@ -138,6 +155,7 @@ public class Facade {
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy", Locale.ENGLISH);
         Date data = formatter.parse(dane[2]);
         pojazd.setStatus( Pojazd.StatusPojazdu.valueOf(dane[1]));
+        pojazd.addHistoryEntry(data, dane[3]);
     }
 
     String sprawdzStanPojazdu(String[] dane) {

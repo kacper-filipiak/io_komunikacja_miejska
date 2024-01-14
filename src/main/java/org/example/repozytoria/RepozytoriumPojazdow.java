@@ -2,12 +2,16 @@ package org.example.repozytoria;
 
 import org.example.valueobjects.Pojazd;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 public class RepozytoriumPojazdow implements Repozytorium<Pojazd> {
-    private List<Pojazd> rejestrPojazdow;
+    private final List<Pojazd> rejestrPojazdow;
 
+    public RepozytoriumPojazdow(){
+        rejestrPojazdow = new ArrayList<>();
+    }
 
     @Override
     public Pojazd wyszukaj(String nazwa) {

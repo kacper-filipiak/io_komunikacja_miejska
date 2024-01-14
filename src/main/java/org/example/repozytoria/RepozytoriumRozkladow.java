@@ -1,15 +1,17 @@
 package org.example.repozytoria;
 
-import jdk.jshell.spi.ExecutionControl;
 import org.example.valueobjects.Pojazd;
-import org.example.valueobjects.Przystanek;
 import org.example.valueobjects.Rozklad;
 import org.example.valueobjects.Trasa;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class RepozytoriumRozkladow implements Repozytorium<Rozklad> {
-    private List<Rozklad> rejestrRozkladow;
+    private final List<Rozklad> rejestrRozkladow;
+    public RepozytoriumRozkladow(){
+        rejestrRozkladow = new ArrayList<>();
+    }
     @Override
     public Rozklad wyszukaj(String nazwa) {
         for (Rozklad rozklad : rejestrRozkladow) {

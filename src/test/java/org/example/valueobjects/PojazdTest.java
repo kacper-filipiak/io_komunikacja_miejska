@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
 import java.util.Date;
+import java.util.Map;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -23,9 +24,13 @@ class PojazdTest {
     @Test
     void getHistoria() {
         //GIVEN
-
+        Date time = Date.from(Instant.ofEpochSecond(30000));
+        String description = "opis1";
+        SUT.addHistoryEntry(time, description);
         //WHEN
+        Map<Date, String> actual = SUT.getHistoria();
         //THEN
+        assertEquals(Map.of(time, description), actual);
     }
 
     @Test
